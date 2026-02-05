@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HydroSense Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    html, body {
+      height: 100%;
+    }
+    
+    #sidebar {
+      width: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background-color: #f0f0f0; /* Grey color */
+      color: black; /* Text color black */
+      position: fixed;
+        z-index: 1;
+      transition: transform 0.3s ease;
+    }
+
+    #sidebar .nav-link {
+      color: black;
+    }
+
+    #sidebar .nav-link:hover {
+      color: #333333;
+    }
+    
+    .nav-item {
+      margin-bottom: 20px;
+      border-bottom: 1px solid black;
+      padding-bottom: 10px;
+    }
+
+    .nav-item:last-child {
+      border-bottom: none;
+    }
+
+    .card {
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Sidebar hidden for smaller screens */
+    @media (max-width: 768px) {
+      #sidebar {
+        transform: translateX(-100%);
+      }
+
+      #sidebar.active {
+        transform: translateX(0);
+      }
+
+      #toggle-sidebar {
+        display: block;
+      }
+    }
+    
+    @media (min-width: 769px) {
+      #toggle-sidebar {
+        display: none;
+      }
+    }
+
+    header {
+      margin-left: 250px; /* Reserve space for sidebar */
+    }
+
+
+
+    @media (max-width: 768px) {
+      header, .main-content {
+        margin-left: 0;
+      }
+    }
+
+    /* Map specific styles */
+    #map {
+      height: 600px;
+      width: 100%;
+      padding-left: 50%;
+    }
+
+    #dropdown {
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toggle button for smaller screens -->
+  <button id="toggle-sidebar" class="btn btn-primary m-3 d-md-none">☰ Menu</button>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="bg-light text-black p-3">
+    <!-- Logo Section -->
+    <img src="images/logo1.png" alt="HydroSense Logo" class="logo"> 
+
+    <!-- Navigation Links -->
+    <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link text-black" href="map.html">Map</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" href="dashboard.html">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" href="complaints.html">Complaints</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" href="maintain.html">Maintenance</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-black" href="report.html">Report</a>
+        </li>
+      </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="w-100 main-content">
+    <!-- Header -->
+    <header class="p-3 bg-primary text-white">
+      <h1>HydroSense Dashboard</h1>
+    </header>
+
+    <!-- Zone Dropdown and Map Section -->
+    <div class="container my-4" style="margin-left: 250px;">
+      <!-- <h2>Non-Revenue Water Management Map</h2> -->
+      <select id="dropdown" class="form-select">
+        <option value="default">Select region</option>
+        <option value="Region1">Region1 </option>
+        <option value="Region2">Region2 </option>
+        <option value="Region3">Region3 </option>
+      </select>
+
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- JavaScript to toggle sidebar -->
+  <script>
+    document.getElementById('toggle-sidebar').addEventListener('click', function () {
+      document.getElementById('sidebar').classList.toggle('active');
+    });
+
+    // Initialize the map
+    var map = L.map('map').setView([13.0827, 80.2707], 14);  // Default view of Chennai landmass
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    fetch('export.geojson')
+            .then(response => response.json())
+            .then(data => {
+                // Add GeoJSON data to the map as pipelines
+                L.geoJSON(data, {
+                    style: function (feature) {
+                        return { color: '#2779c2', weight: 2 };  // Pipeline style
+                    }
+                }).addTo(map);
+            });
+
+    // Add markers for regions inside Chennai
+    var markers = {
+      "Region1": L.marker([13.0109, 80.2174]).addTo(map).bindPopup('Guindy, Chennai'),        // Zone 1 - Guindy
+      "Region2": L.marker([13.1148, 80.2872]).addTo(map).bindPopup('Washermenpet, Chennai'),  // Zone 2 - Chengalpattu
+      "Region3": L.marker([13.1137,  80.2954]).addTo(map).bindPopup('Royapuram, Chennai')       // Zone 3 - Tambaram
+    };
+
+    // Zoom functionality based on dropdown selection
+    var dropdown = document.getElementById('dropdown');
+    dropdown.addEventListener('change', function () {
+      var selectedZone = this.value;
+
+      if (selectedZone === "Region1") {
+        map.setView([13.0109, 80.2174], 14);  // Zoom to Guindy
+        markers["Region1"].openPopup();
+      } else if (selectedZone === "Region2") {
+        map.setView([12.6940, 79.9754], 14);  // Zoom to Chengalpattu
+        markers["Region2"].openPopup();
+      } else if (selectedZone === "Region3") {
+        map.setView([12.9229, 80.1275], 14);  // Zoom to Tambaram
+        markers["Region3"].openPopup();
+      } else {
+        map.setView([13.0827, 80.2707], 12);  // Default zoom (Chennai city area)
+      }
+    });
+  </script>
+</body>
+</html>

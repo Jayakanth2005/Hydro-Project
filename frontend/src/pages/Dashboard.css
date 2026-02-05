@@ -1,0 +1,158 @@
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f2f2ff;
+}
+
+.dashboard-content {
+    margin-left: 250px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-header {
+    background-color: #007bff;
+    color: white;
+    padding: 20px 30px;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.dashboard-main {
+    padding: 30px;
+}
+
+.dashboard-main h3 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.tier-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.tier-dropdown {
+    position: relative;
+}
+
+.tier-btn {
+    padding: 12px 24px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.tier-btn:hover {
+    background-color: #555;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    margin-top: 5px;
+    min-width: 150px;
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}
+
+.realtime-data-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.realtime-data-card h4 {
+    margin-top: 0;
+    color: #007bff;
+}
+
+.sensor-info p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+}
+
+.table-container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.sensor-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sensor-table thead {
+    background-color: #333;
+    color: white;
+}
+
+.sensor-table th,
+.sensor-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.sensor-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.battery-status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.battery-status.good {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.battery-status.low {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+@media (max-width: 768px) {
+    .dashboard-content {
+        margin-left: 0;
+    }
+
+    .tier-buttons {
+        flex-direction: column;
+    }
+}
