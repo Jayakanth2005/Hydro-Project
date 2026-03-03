@@ -80,5 +80,6 @@ document.getElementById('gov-login-button').addEventListener('click', () => {
         window.location.href = "user web/dashboard.html"; // Redirect to Government Dashboard
     } else {
         alert("Invalid government credentials.");
+
     }
 });
